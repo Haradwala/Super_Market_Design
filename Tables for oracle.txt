@@ -1,0 +1,170 @@
+Table list for project:
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR2(50),
+    LastName VARCHAR2(50),
+    Email VARCHAR2(100),
+    Phone VARCHAR2(15)
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR2(100),
+    SupplierID INT,
+    Price NUMBER(10, 2),
+    Category VARCHAR2(50)
+);
+
+CREATE TABLE Suppliers (
+    SupplierID INT PRIMARY KEY,
+    SupplierName VARCHAR2(100),
+    ContactName VARCHAR2(100),
+    ContactPhone VARCHAR2(15)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATE,
+    TotalAmount NUMBER(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE OrderItems (
+    OrderItemID INT PRIMARY KEY,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    Price NUMBER(10, 2),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR2(50),
+    LastName VARCHAR2(50),
+    Position VARCHAR2(50),
+    HireDate DATE
+);
+
+CREATE TABLE Inventory (
+    ProductID INT PRIMARY KEY,
+    Quantity INT,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+-- Table for Warehouses
+CREATE TABLE Warehouses (
+    WarehouseID INT PRIMARY KEY,
+    WarehouseName VARCHAR2(100),
+    Location VARCHAR2(200),
+    ManagerID INT,
+    FOREIGN KEY (ManagerID) REFERENCES Employees(EmployeeID)
+);
+
+-- Table for Drivers
+CREATE TABLE Drivers (
+    DriverID INT PRIMARY KEY,
+    FirstName VARCHAR2(50),
+    LastName VARCHAR2(50),
+    Phone VARCHAR2(15),
+    LicenseNumber VARCHAR2(20),
+    HireDate DATE,
+    EmployeeID INT,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+-- Table for HR Departments
+CREATE TABLE HRDepartments (
+    HRDepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR2(100),
+    ManagerID INT,
+    FOREIGN KEY (ManagerID) REFERENCES Employees(EmployeeID)
+);
+
+-- Table for Employee Roles
+CREATE TABLE EmployeeRoles (
+    RoleID INT PRIMARY KEY,
+    RoleName VARCHAR2(50),
+    EmployeeID INT,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+-- Table for Warehouse Inventory
+CREATE TABLE WarehouseInventory (
+    WarehouseID INT,
+    ProductID INT,
+    Quantity INT,
+    PRIMARY KEY (WarehouseID, ProductID),
+    FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+-- Table for Deliveries
+CREATE TABLE Deliveries (
+    DeliveryID INT PRIMARY KEY,
+    OrderID INT,
+    DriverID INT,
+    DeliveryDate DATE,
+    DeliveryStatus VARCHAR2(50),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (DriverID) REFERENCES Drivers(DriverID)
+);
+
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY,
+    OrderID INT,
+    PaymentDate DATE,
+    Amount NUMBER(10, 2),
+    PaymentMethod VARCHAR2(50),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+CREATE TABLE Payrolls (
+    PayrollID INT PRIMARY KEY,
+    EmployeeID INT,
+    PayDate DATE,
+    Salary NUMBER(10, 2),
+    Bonus NUMBER(10, 2),
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+CREATE TABLE Stocks (
+    StockID INT PRIMARY KEY,
+    ProductID INT,
+    StockDate DATE,
+    Quantity INT,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR2(100),
+    ManagerID INT,
+    FOREIGN KEY (ManagerID) REFERENCES Employees(EmployeeID)
+);
+
+CREATE TABLE InventoryTransactions (
+    TransactionID INT PRIMARY KEY,
+    ProductID INT,
+    WarehouseID INT,
+    TransactionDate DATE,
+    Quantity INT,
+    TransactionType VARCHAR2(50), -- E.g., 'IN' for incoming stock, 'OUT' for outgoing stock
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID)
+);
+
+CREATE TABLE EmployeeDependents (
+    DependentID INT PRIMARY KEY,
+    EmployeeID INT,
+    FirstName VARCHAR2(50),
+    LastName VARCHAR2(50),
+    Relationship VARCHAR2(50),
+    DateOfBirth DATE,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+
